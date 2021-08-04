@@ -6,11 +6,15 @@ import pandas as pd
 import numpy as np
 import re
 
+# if __name__ == '__main__':
+#     main()
+print('Will begin in 2 seconds')
+sleep(2)
 
 d = pd.read_csv(
     'hardcopy-rent-kl-sentral-438-property-links.csv').values.tolist()
 links = list(itertools.chain(*d))
-test_list = links
+test_list = links[5]
 
 print('\n')
 print(test_list)
@@ -29,7 +33,9 @@ property_address = []
 built_up = []
 land_area = []
 details = []
+#Property details
 property_type = []
+tenure = []
 land_title = []
 property_title_type = []
 tenure = []
@@ -39,6 +45,7 @@ furnishing = []
 occupancy = []
 unit_type = []
 reference = []
+available_date =[]
 posted_date = []
 property_features = []
 
@@ -51,6 +58,9 @@ for i in range(len(test_list)):
     prop_name = soup.find_all(
         'h1', class_='PropertySummarystyle__ProjectTitleWrapper-kAhflS PNQmp')[0].text
 
+    print('********** ' + str(i) + ' Scraping data for: ' +prop_name + ' **********')
+
+    #getting all the data from the website
     rent_id.append(property_url.split('/')[6])
     title.append(soup.find_all('title')[0].text)
     str_price = soup.find_all('div', class_='ListingPrice__Price-cYBbuG cspQqH property-price')[
@@ -66,6 +76,7 @@ for i in range(len(test_list)):
     land_area.append(soup.find_all(
         'li', class_='PropertySummarystyle__AreaInfoItem-NjZCY dUovgc')[1].text.split(': ')[1])
     details.append(str(soup.find('pre')).split('>')[1].splitlines())
+    # >>> Property details <<< 
     property_type.append(soup.find_all(
         'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[0].text)
     land_title.append(soup.find_all(
@@ -74,25 +85,47 @@ for i in range(len(test_list)):
         'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[2].text)
     tenure.append(soup.find_all(
         'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[3].text)
-    built_up_size_sq_ft.append(int(''.join(itertools.takewhile(str.isdigit, soup.find_all(
-        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[4].text.split(' ')[0].replace(',', '')))))
-    built_up_price_per_sq_ft.append(float(soup.find_all(
-        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[5].text.split(' ')[1]))
+    built_up_size_sq_ft.append(soup.find_all(
+        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[4].text.split(' ')[0])
+    built_up_price_per_sq_ft.append(soup.find_all(
+        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[5].text.split(' ')[1])
     furnishing.append(soup.find_all(
         'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[6].text)
     occupancy.append(soup.find_all(
         'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[7].text)
     unit_type.append(soup.find_all(
         'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[8].text)
-    reference.append(int(soup.find_all(
-        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[9].text))
+    reference.append(soup.find_all(
+        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[9].text)
     posted_date.append(pd.to_datetime(soup.find_all(
         'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[10].text))
+
+    # >>> End of property details <<< 
     property_features.append([i.text for i in soup.find_all(
         'div', class_='attribute-title-container')])
 
-    print('********** ' + str(i) + ' Data scraped for: ' +
-          prop_name + ' **********')
+
+    print(rent_id)
+    print(title)
+    print(property_price)
+    print(property_summary)
+    print(property_address)
+    print(built_up)
+    print(land_area)
+    print(details)
+    print(property_type)
+    print(land_title)
+    print(property_title_type)
+    print(tenure)
+    print(built_up_size_sq_ft)
+    print(built_up_price_per_sq_ft)
+    print(furnishing)
+    print(occupancy)
+    print(unit_type)
+    print(reference)
+    print(posted_date)
+    print(property_features)
+
 
 print('\n********** SCRAPE COMPLETED **********')
 
