@@ -11,60 +11,138 @@ class Task():
         if 'Property Type' in details_dict: 
             temp = details_dict['Property Type']
             property_type.append(soup.find_all('div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[temp].text)
+            print('Property Type: '+ 'Success')
         else:
-            print('error')
-            pass
+            print('Property Type: '+'NaN')
+            property_type.append('NaN')
+
     def land_title(self):
         if 'Land Title' in details_dict: 
             temp = details_dict['Land Title']
-            property_type.append(soup.find_all('div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[temp].text)
+            land_title.append(soup.find_all('div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[temp].text)
+            print('Land Title: '+ 'Success')
         else:
-            print('error')
-            pass        
+            print('Land Title: '+'NaN')
+            land_title.append('NaN')
+
     def property_title_type(self):
-        pass
+        if 'Property Title Type' in details_dict: 
+            temp = details_dict['Property Title Type']
+            property_title_type.append(soup.find_all('div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[temp].text)
+            print('Property Title Type: '+'Success')
+        else:
+            print('Property Title Type: '+'NaN')
+            property_title_type.append('NaN')
+
     def tenure(self):
-        pass
+        if 'Tenure' in details_dict: 
+            temp = details_dict['Tenure']
+            tenure.append(soup.find_all('div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[temp].text)
+            print('Tenure: ' + 'Success')
+        else:
+            print('Tenure: ' + 'NaN')
+            tenure.append('NaN')
+
     def built_up_size_sq_ft(self):
-        pass
+        if 'Built-up Size' in details_dict: 
+            temp = details_dict['Built-up Size']
+            built_up_size_sq_ft.append(soup.find_all('div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[temp].text)
+            print('Built-up Size: ' + 'Success')
+        else:
+            print('Built-up Size: ' + 'NaN')
+            built_up_size_sq_ft.append('NaN')
+            
     def built_up_price_per_sq_ft(self):
-        pass
+        if 'Built-up Price' in details_dict: 
+            temp = details_dict['Built-up Price']
+            built_up_price_per_sq_ft.append(soup.find_all('div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[temp].text)
+            print('Built-up Price: ' + 'Success')
+        else:
+            print('Built-up Price: ' + 'NaN')
+            built_up_price_per_sq_ft.append('NaN')
+
     def furnishing(self):
-        pass
+        if 'Furnishing' in details_dict: 
+            temp = details_dict['Furnishing']
+            furnishing.append(soup.find_all('div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[temp].text)
+            print('Furnishing: ' +'Success')
+        else:
+            print('Furnishing: ' +'NaN')
+            furnishing.append('NaN')
+            
     def occupancy(self):
-        pass
+        if 'Occupancy' in details_dict: 
+            temp = details_dict['Occupancy']
+            occupancy.append(soup.find_all('div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[temp].text)
+            print('Occupancy: ' +'Success')
+        else:
+            print('Occupancy: ' +'NaN')
+            occupancy.append('NaN')
+            
     def unit_type(self):
-        pass
+        if 'Unit Type' in details_dict: 
+            temp = details_dict['Unit Type']
+            unit_type.append(soup.find_all('div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[temp].text)
+            print('Unit Type: ' +'Success')
+        else:
+            print('Unit Type: ' +'NaN')
+            unit_type.append('NaN')
+            
+    def facing_direction(self):
+        if 'Facing Direction' in details_dict: 
+            temp = details_dict['Facing Direction']
+            facing_direction.append(soup.find_all('div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[temp].text)
+            print('Facing Direction: '+'Success')
+        else:
+            print('Facing Direction: '+'NaN')
+            facing_direction.append('NaN')
+            
     def reference(self):
-        pass
+        if 'Reference No.' in details_dict: 
+            temp = details_dict['Reference No.']
+            reference.append(soup.find_all('div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[temp].text)
+            print('Reference: '+ 'Success')
+        else:
+            print('Reference: '+ 'NaN')
+            reference.append('NaN')
+            
     def available_date(self):
-        pass
+        if 'Available Date' in details_dict: 
+            temp = details_dict['Available Date']
+            available_date.append(soup.find_all('div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[temp].text)
+            print('Available Date: ' + 'Success')
+        else:
+            print('Available Date: ' + 'NaN')
+            available_date.append('NaN')
+
     def posted_date(self):
-        pass   
-    def property_features(self):
-        pass   
+        if 'Posted Date' in details_dict: 
+            temp = details_dict['Posted Date']
+            posted_date.append(soup.find_all('div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[temp].text)
+            print('Posted Date: ' + 'Success')
+        else:
+            print('Posted Date: ' + 'NaN')
+            posted_date.append('NaN')
+
     def get_method(self, method_name):
         method = getattr(self, method_name)
         return method()
 
-t = Task()
-t.property_type()
+# t = Task()
+# t.property_type()
 # method1 = callbyname.get_method(method_name)
 
-# if __name__ == '__main__':
-#     main()
-print('Will begin in 2 seconds')
-sleep(2)
+print('\nWill begin in 1 seconds')
+sleep(1)
 
 d = pd.read_csv(
     'hardcopy-rent-kl-sentral-438-property-links.csv').values.tolist()
 links = list(itertools.chain(*d))
-test_list = links[5]
+test_list = links[:5]
 
 print('\n')
 print(test_list)
 print('\n')
-
 
 # BeautifulSoup stuff
 headers = {
@@ -138,50 +216,67 @@ for i in range(len(test_list)):
 
     #use classes??? https://stackoverflow.com/a/65408311
 
+    t = Task()
 
-    property_type.append(soup.find_all(
-        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[0].text)
+    t.property_type()
+    t.land_title()
+    t.property_title_type()
+    t.tenure()
+    t.built_up_size_sq_ft()
+    t.built_up_price_per_sq_ft()
+    t.furnishing()
+    t.occupancy()
+    t.unit_type()
+    t.facing_direction()
+    t.reference()
+    t.available_date()
+    t.posted_date()
 
-    land_title.append(soup.find_all(
-        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[1].text)
+    # property_type.append(soup.find_all(
+    #     'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[0].text)
 
-    property_title_type.append(soup.find_all(
-        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[2].text)
+    # land_title.append(soup.find_all(
+    #     'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[1].text)
 
-    tenure.append(soup.find_all(
-        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[3].text)
+    # property_title_type.append(soup.find_all(
+    #     'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[2].text)
 
-    built_up_size_sq_ft.append(soup.find_all(
-        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[4].text.split(' ')[0])
+    # tenure.append(soup.find_all(
+    #     'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[3].text)
 
-    built_up_price_per_sq_ft.append(soup.find_all(
-        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[5].text.split(' ')[1])
+    # built_up_size_sq_ft.append(soup.find_all(
+    #     'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[4].text.split(' ')[0])
 
-    furnishing.append(soup.find_all(
-        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[6].text)
+    # built_up_price_per_sq_ft.append(soup.find_all(
+    #     'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[5].text.split(' ')[1])
 
-    occupancy.append(soup.find_all(
-        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[7].text)
+    # furnishing.append(soup.find_all(
+    #     'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[6].text)
 
-    unit_type.append(soup.find_all(
-        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[8].text)
+    # occupancy.append(soup.find_all(
+    #     'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[7].text)
 
-    facing_direction.append(soup.find_all(
-        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[6].text)
+    # unit_type.append(soup.find_all(
+    #     'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[8].text)
 
-    reference.append(soup.find_all(
-        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[9].text)
+    # facing_direction.append(soup.find_all(
+    #     'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[6].text)
 
-    posted_date.append(pd.to_datetime(soup.find_all(
-        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[10].text))
+    # reference.append(soup.find_all(
+    #     'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[9].text)
+
+    # posted_date.append(pd.to_datetime(soup.find_all(
+    #     'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[10].text))
  
-    available.append(pd.to_datetime(soup.find_all(
-        'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[10].text))
+    # available.append(pd.to_datetime(soup.find_all(
+    #     'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[10].text))
 
     # >>> End of property details <<<
+    if [i.text for i in soup.find_all('div', class_='attribute-title-container')] != []:
+        property_features.append([i.text for i in soup.find_all('div', class_='attribute-title-container')])
+    else:
+        property_features.append('NaN')
 
-    property_features.append([i.text for i in soup.find_all(
-        'div', class_='attribute-title-container')])
 
 
     print(rent_id)
