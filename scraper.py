@@ -252,7 +252,7 @@ sleep(1)
 data_links = pd.read_csv(
     'hardcopy-rent-kl-sentral-438-property-links.csv').values.tolist()
 links = list(itertools.chain(*data_links))
-test_list = links[:3]
+test_list = links[:]
 
 print('\nList of properties to be scraped...')
 sleep(2)
