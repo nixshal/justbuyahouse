@@ -1,12 +1,15 @@
 import requests
 from bs4 import BeautifulSoup
 from time import sleep
+import time
 from datetime import datetime
 import itertools
 import inspect
 import pandas as pd
 import numpy as np
 import re
+
+startTime = time.time()
 
 # To do
 # rename the Task class
@@ -335,3 +338,6 @@ kl_sentral = pd.DataFrame({'rent_id': rent_id,
 date = datetime.now().strftime("%Y_%m_%d-%I-%M-%S_%p")
 filename = 'kl_sentral_' + date + '.xlsx'
 kl_sentral.to_excel(filename)
+
+# Timing information
+print('The script took {0} seconds !'.format(time.time() - startTime))
