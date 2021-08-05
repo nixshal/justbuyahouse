@@ -90,9 +90,9 @@ class Task():
                 'li', class_='PropertySummarystyle__AreaInfoItem-NjZCY dUovgc')[1].text != '':
             land_area_sq_ft.append(soup.find_all(
                 'li', class_='PropertySummarystyle__AreaInfoItem-NjZCY dUovgc')[1].text.split(': ')[1])
-            print('Land Area_sq_ft              : ' + 'Success')
+            print('Land Area_sq_ft                  : ' + 'Success')
         else:
-            print('Land Area_sq_ft              : '+'NaN')
+            print('Land Area_sq_ft                  : '+'NaN')
             land_area_sq_ft.append('NaN')
 
     def property_details(self):
@@ -252,7 +252,7 @@ sleep(1)
 data_links = pd.read_csv(
     'hardcopy-rent-kl-sentral-438-property-links.csv').values.tolist()
 links = list(itertools.chain(*data_links))
-test_list = links[:1000]
+test_list = links[:3]
 
 print('\nList of properties to be scraped...')
 sleep(2)
