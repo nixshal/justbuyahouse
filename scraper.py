@@ -22,7 +22,7 @@ class Task():
 
     def rent_id(self):                      # START: Standard data on each property page
         if property_url != '':
-            rent_id.append(property_url.split('/')[6])
+            rent_id.append(property_url.split('/')[-2])
             print('Rent ID                          : ' + 'Success')
         else:
             print('Rent ID                          : '+'NaN')
@@ -85,15 +85,15 @@ class Task():
             print('Built Up                         : '+'NaN')
             built_up.append('NaN')
 
-    def land_area(self):
+    def land_area_sq_ft(self):
         if soup.find_all(
                 'li', class_='PropertySummarystyle__AreaInfoItem-NjZCY dUovgc')[1].text != '':
-            land_area.append(soup.find_all(
+            land_area_sq_ft.append(soup.find_all(
                 'li', class_='PropertySummarystyle__AreaInfoItem-NjZCY dUovgc')[1].text.split(': ')[1])
-            print('Land Area                        : ' + 'Success')
+            print('Land Area_sq_ft              : ' + 'Success')
         else:
-            print('Land Area                        : '+'NaN')
-            land_area.append('NaN')
+            print('Land Area_sq_ft              : '+'NaN')
+            land_area_sq_ft.append('NaN')
 
     def property_details(self):
         if str(soup.find_all('pre')) != '':
@@ -253,7 +253,7 @@ sleep(1)
 data_links = pd.read_csv(
     'hardcopy-rent-kl-sentral-438-property-links.csv').values.tolist()
 links = list(itertools.chain(*data_links))
-test_list = links[:3]
+test_list = links[19:22]
 
 print('\nList of properties to be scraped...')
 sleep(2)
@@ -265,7 +265,7 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36'}
 
 # Initialize empty lists
-rent_id, prop_url, title, property_price, property_summary, property_address, built_up, land_area, property_details, property_features, property_type, land_title, property_title_type, tenure, built_up_size_sq_ft, built_up_price_per_sq_ft, furnishing, occupancy, unit_type, facing_direction, reference, available_date, posted_date = ([
+rent_id, prop_url, title, property_price, property_summary, property_address, built_up, land_area_sq_ft, property_details, property_features, property_type, land_title, property_title_type, tenure, built_up_size_sq_ft, built_up_price_per_sq_ft, furnishing, occupancy, unit_type, facing_direction, reference, available_date, posted_date = ([
 ] for i in range(23))
 
 # Loop through the different properties from the .csv file (links)
@@ -307,7 +307,7 @@ for i in range(len(test_list)):
 print('\n********** SCRAPE COMPLETED **********')
 
 # Adding to a DataFrame
-columns = ['rent_id', 'prop_url', 'title', 'property_price', 'property_summary', 'property_address', 'built_up', 'land_area', 'property_details', 'property_type', 'land_title',
+columns = ['rent_id', 'prop_url', 'title', 'property_price', 'property_summary', 'property_address', 'built_up', 'land_area_sq_ft', 'property_details', 'property_type', 'land_title',
            'property_title_type', 'tenure', 'built_up_size_sq_ft', 'built_up_price_per_sq_ft', 'furnishing', 'occupancy', 'unit_type', 'reference', 'posted_date', 'available_date',
            'property_features', 'facing_direction']
 
@@ -318,7 +318,7 @@ kl_sentral = pd.DataFrame({'rent_id': rent_id,
                            'property_summary': property_summary,
                            'property_address': property_address,
                            'built_up': built_up,
-                           'land_area': land_area,
+                           'land_area_sq_ft': land_area_sq_ft,
                            'property_details': property_details,
                            'property_type': property_type,
                            'land_title': land_title,
