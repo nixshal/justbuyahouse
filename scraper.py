@@ -246,14 +246,13 @@ class Task():
     #     method = getattr(self, method_name)
     #     return method()
 
-
 print('\n| iProperty.com.my Scraper |')
 sleep(1)
 
 data_links = pd.read_csv(
     'hardcopy-rent-kl-sentral-438-property-links.csv').values.tolist()
 links = list(itertools.chain(*data_links))
-test_list = links[19:22]
+test_list = links[:1000]
 
 print('\nList of properties to be scraped...')
 sleep(2)
@@ -268,76 +267,80 @@ headers = {
 rent_id, prop_url, title, property_price, property_summary, property_address, built_up, land_area_sq_ft, property_details, property_features, property_type, land_title, property_title_type, tenure, built_up_size_sq_ft, built_up_price_per_sq_ft, furnishing, occupancy, unit_type, facing_direction, reference, available_date, posted_date = ([
 ] for i in range(23))
 
-# Loop through the different properties from the .csv file (links)
-for i in range(len(test_list)):
-    property_url = 'https://www.iproperty.com.my' + test_list[i]
-    # print(r) #to get website's response
-    r = requests.get(property_url, headers=headers)
-    sleep(5)
-    soup = BeautifulSoup(r.content, 'html.parser')
+try:
+    # Loop through the different properties from the .csv file (links)
+    for i in range(len(test_list)):
+        property_url = 'https://www.iproperty.com.my' + test_list[i]
+        # print(r) #to get website's response
+        r = requests.get(property_url, headers=headers)
+        sleep(5)
+        soup = BeautifulSoup(r.content, 'html.parser')
 
-    prop_name = soup.find_all(
-        'h1', class_='PropertySummarystyle__ProjectTitleWrapper-kAhflS PNQmp')[0].text
+        prop_name = soup.find_all(
+            'h1', class_='PropertySummarystyle__ProjectTitleWrapper-kAhflS PNQmp')[0].text
 
-    print('********** ' + str(i) + ' Scraping data for: ' +
-          prop_name + ' **********')
+        print('********** ' + str(i) + ' Scraping data for: ' +
+            prop_name + ' **********')
 
-    # Creating a dictionary for property details held in container
-    # Needed because problem here is that proeprty details are different for each property. So need to have conditionals to match the correct list to be updated
-    propdetails = soup.find_all(
-        'div', class_='PropertyDetailsListstyle__AttributeItemTitle-gtQJBp YzpOn')
-    details = [i.text for i in propdetails]
-    details = [i.split(':') for i in details]
-    details = [i[0] for i in details]  # print(details)
-    val = list(range(0, len(propdetails)))  # print(val)
-    details_dict = dict(zip(details, val))  # print(details_dict)
+        # Creating a dictionary for property details held in container
+        # Needed because problem here is that proeprty details are different for each property. So need to have conditionals to match the correct list to be updated
+        propdetails = soup.find_all(
+            'div', class_='PropertyDetailsListstyle__AttributeItemTitle-gtQJBp YzpOn')
+        details = [i.text for i in propdetails]
+        details = [i.split(':') for i in details]
+        details = [i[0] for i in details]  # print(details)
+        val = list(range(0, len(propdetails)))  # print(val)
+        details_dict = dict(zip(details, val))  # print(details_dict)
 
-    t = Task()  # Initialize Task object as t
-    # Identify all methods in class and execute, rather than list methods 1 by 1
-    # https://stackoverflow.com/a/37075789
+        t = Task()  # Initialize Task object as t
+        # Identify all methods in class and execute, rather than list methods 1 by 1
+        # https://stackoverflow.com/a/37075789
 
-    attrs = (getattr(t, name) for name in dir(t))
-    methods = filter(inspect.ismethod, attrs)
-    for method in methods:
-        try:
-            method()
-        except:
-            pass
+        attrs = (getattr(t, name) for name in dir(t))
+        methods = filter(inspect.ismethod, attrs)
+        for method in methods:
+            try:
+                method()
+            except:
+                pass
 
-print('\n********** SCRAPE COMPLETED **********')
+    print('\n********** SCRAPE COMPLETED **********')
 
-# Adding to a DataFrame
-columns = ['rent_id', 'prop_url', 'title', 'property_price', 'property_summary', 'property_address', 'built_up', 'land_area_sq_ft', 'property_details', 'property_type', 'land_title',
-           'property_title_type', 'tenure', 'built_up_size_sq_ft', 'built_up_price_per_sq_ft', 'furnishing', 'occupancy', 'unit_type', 'reference', 'posted_date', 'available_date',
-           'property_features', 'facing_direction']
+    # Adding to a DataFrame
+    columns = ['rent_id', 'prop_url', 'title', 'property_price', 'property_summary', 'property_address', 'built_up', 'land_area_sq_ft', 'property_details', 'property_type', 'land_title',
+            'property_title_type', 'tenure', 'built_up_size_sq_ft', 'built_up_price_per_sq_ft', 'furnishing', 'occupancy', 'unit_type', 'reference', 'posted_date', 'available_date',
+            'property_features', 'facing_direction']
 
-kl_sentral = pd.DataFrame({'rent_id': rent_id,
-                           'prop_url': prop_url,
-                           'title': title,
-                           'property_price': property_price,
-                           'property_summary': property_summary,
-                           'property_address': property_address,
-                           'built_up': built_up,
-                           'land_area_sq_ft': land_area_sq_ft,
-                           'property_details': property_details,
-                           'property_type': property_type,
-                           'land_title': land_title,
-                           'property_title_type': property_title_type,
-                           'tenure': tenure,
-                           'built_up_size_sq_ft': built_up_size_sq_ft,
-                           'built_up_price_per_sq_ft': built_up_price_per_sq_ft,
-                           'furnishing': furnishing,
-                           'occupancy': occupancy,
-                           'unit_type': unit_type,
-                           'reference': reference,
-                           'posted_date': posted_date,
-                           'property_features': property_features,
-                           'facing_direction': facing_direction,
-                           'available_date': available_date})[columns]
+    kl_sentral = pd.DataFrame({'rent_id': rent_id,
+                            'prop_url': prop_url,
+                            'title': title,
+                            'property_price': property_price,
+                            'property_summary': property_summary,
+                            'property_address': property_address,
+                            'built_up': built_up,
+                            'land_area_sq_ft': land_area_sq_ft,
+                            'property_details': property_details,
+                            'property_type': property_type,
+                            'land_title': land_title,
+                            'property_title_type': property_title_type,
+                            'tenure': tenure,
+                            'built_up_size_sq_ft': built_up_size_sq_ft,
+                            'built_up_price_per_sq_ft': built_up_price_per_sq_ft,
+                            'furnishing': furnishing,
+                            'occupancy': occupancy,
+                            'unit_type': unit_type,
+                            'reference': reference,
+                            'posted_date': posted_date,
+                            'property_features': property_features,
+                            'facing_direction': facing_direction,
+                            'available_date': available_date})[columns]
 
-date = datetime.now().strftime("%Y_%m_%d-%I-%M-%S_%p")
-filename = 'kl_sentral_' + date + '.xlsx'
-kl_sentral.to_excel(filename)
+    date = datetime.now().strftime("%Y_%m_%d-%I-%M-%S_%p")
+    filename = 'kl_sentral_' + date + '.xlsx'
+    kl_sentral.to_excel(filename)
 
-# Timing information
-print('The script took {0} seconds !'.format(time.time() - startTime))
+    # Timing information
+    print('The script took {0} seconds !'.format(time.time() - startTime))
+
+except:
+    pass
