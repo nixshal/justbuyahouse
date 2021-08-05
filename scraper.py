@@ -252,10 +252,10 @@ sleep(1)
 data_links = pd.read_csv(
     'hardcopy-rent-kl-sentral-438-property-links.csv').values.tolist()
 links = list(itertools.chain(*data_links))
-test_list = links[:]
+test_list = links[:1000]
 
 print('\nList of properties to be scraped...')
-sleep(2)
+sleep(1)
 text = "{}".format("\n".join(test_list))
 print(text + '\n')
 
@@ -273,7 +273,7 @@ try:
         property_url = 'https://www.iproperty.com.my' + test_list[i]
         # print(r) #to get website's response
         r = requests.get(property_url, headers=headers)
-        sleep(5)
+        sleep(7)
         soup = BeautifulSoup(r.content, 'html.parser')
 
         prop_name = soup.find_all(
