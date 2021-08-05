@@ -1,3 +1,18 @@
+#To Do: 
+
+make sure the class works properly
+check what value is returned 
+copy this class into main .py script and test
+
+
+
+
+
+
+
+
+
+
 
 import requests
 from bs4 import BeautifulSoup
