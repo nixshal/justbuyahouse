@@ -339,8 +339,11 @@ try:
     filename = 'kl_sentral_' + date + '.xlsx'
     kl_sentral.to_excel(filename)
 
-    # Timing information
-    print('The script took {0} seconds !'.format(time.time() - startTime))
+    # Timing info
+    print('\nThe script took {0} seconds !'.format(time.time() - startTime))
+
+    # File save location info
+    print('nFile saved to: ' + filename)
 
 except:
     pass
