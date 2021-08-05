@@ -1,32 +1,34 @@
 import requests
 from bs4 import BeautifulSoup
 from time import sleep
+from datetime import datetime
 import itertools
+import inspect
 import pandas as pd
 import numpy as np
 import re
 
 # To do
-# use classes??? https://stackoverflow.com/a/65408311 DONE
-# ValueError from property_details column cause array not same length DONE
-# fix classes and add all the functions there to scraped
+# rename the Task class
+# create a class for the scraping of links
 # how to get the phone number and agent etc? use JSON? https://stackoverflow.com/questions/67515161/beautiful-soup-returns-an-empty-string-when-website-has-text
+# error handling, add some try, except clauses
 
 
 class Task():
-    # START: Standard data on each property page
-    def rent_id(self):
-        if property_url != None:
+
+    def rent_id(self):                      # START: Standard data on each property page
+        if property_url != '':
             rent_id.append(property_url.split('/')[6])
-            print('Rent ID                    : ' + 'Success')
+            print('Rent ID                          : ' + 'Success')
         else:
-            print('Rent ID                   : '+'NaN')
+            print('Rent ID                          : '+'NaN')
             rent_id.append('NaN')
 
     def prop_url(self):
-        if property_url != None:
+        if property_url != '':
             prop_url.append(property_url)
-            print('Property URL                   : ' + 'Success')
+            print('Property URL                     : ' + 'Success')
         else:
             print('Property URL                     : '+'NaN')
             prop_url.append('NaN')
@@ -34,9 +36,9 @@ class Task():
     def title(self):
         if soup.find_all('title')[0].text != '':
             title.append(soup.find_all('title')[0].text)
-            print('Title                   : ' + 'Success')
+            print('Title                            : ' + 'Success')
         else:
-            print('Title                     : '+'NaN')
+            print('Title                            : '+'NaN')
             title.append('NaN')
 
     def property_price(self):
@@ -48,62 +50,66 @@ class Task():
                 int(''.join(itertools.takewhile(str.isdigit, str_price))))
             print('Property Price                   : ' + 'Success')
         else:
-            print('Property Price                     : '+'NaN')
+            print('Property Price                   : '+'NaN')
             title.append('NaN')
 
     def property_summary(self):
         if soup.find_all('h1', class_='PropertySummarystyle__ProjectTitleWrapper-kAhflS PNQmp')[0].text != '':
-            property_summary.append(soup.find_all('h1', class_='PropertySummarystyle__ProjectTitleWrapper-kAhflS PNQmp')[0].text)
-            print('Property Summary                   : ' + 'Success')
+            property_summary.append(soup.find_all(
+                'h1', class_='PropertySummarystyle__ProjectTitleWrapper-kAhflS PNQmp')[0].text)
+            print('Property Summary                 : ' + 'Success')
         else:
-            print('Property Summary                      : '+'NaN')
+            print('Property Summary                 : '+'NaN')
             property_summary.append('NaN')
 
     def property_address(self):
         if soup.find_all(
-        'span', class_='property-address rent-default')[0].text != '':
+                'span', class_='property-address rent-default')[0].text != '':
             property_address.append(soup.find_all(
-        'span', class_='property-address rent-default')[0].text)
-            print('Property Address                   : ' + 'Success')
+                'span', class_='property-address rent-default')[0].text)
+            print('Property Address                 : ' + 'Success')
         else:
-            print('Property Address                     : '+'NaN')
+            print('Property Address                 : '+'NaN')
             property_address.append('NaN')
 
     def built_up(self):
         if soup.find_all(
-        'li', class_='PropertySummarystyle__AreaInfoItem-NjZCY dUovgc')[0].text != '':
-            built_up.append(soup.find_all('li', class_='PropertySummarystyle__AreaInfoItem-NjZCY dUovgc')[0].text.split(': ')[1])
-            print('Built Up                   : ' + 'Success')
+                'li', class_='PropertySummarystyle__AreaInfoItem-NjZCY dUovgc')[0].text != '':
+            built_up.append(soup.find_all(
+                'li', class_='PropertySummarystyle__AreaInfoItem-NjZCY dUovgc')[0].text.split(': ')[1])
+            print('Built Up                         : ' + 'Success')
         else:
-            print('Built Up                     : '+'NaN')
+            print('Built Up                         : '+'NaN')
             built_up.append('NaN')
 
     def land_area(self):
         if soup.find_all(
-        'li', class_='PropertySummarystyle__AreaInfoItem-NjZCY dUovgc')[1].text != '':
-            land_area.append(soup.find_all('li', class_='PropertySummarystyle__AreaInfoItem-NjZCY dUovgc')[1].text.split(': ')[1])
-            print('Land Area                   : ' + 'Success')
+                'li', class_='PropertySummarystyle__AreaInfoItem-NjZCY dUovgc')[1].text != '':
+            land_area.append(soup.find_all(
+                'li', class_='PropertySummarystyle__AreaInfoItem-NjZCY dUovgc')[1].text.split(': ')[1])
+            print('Land Area                        : ' + 'Success')
         else:
-            print('Land Area                     : '+'NaN')
+            print('Land Area                        : '+'NaN')
             land_area.append('NaN')
 
     def property_details(self):
-        if str(soup.find_all('pre')) != []:
+        if str(soup.find_all('pre')) != '':
             property_details.append(str(soup.find_all('pre')))
-            print('Title                   : ' + 'Success')
+            print('Property Details                 : ' + 'Success')
         else:
-            print('Title                     : '+'NaN')
+            print('Property Details                 : '+'NaN')
             property_details.append('NaN')
 
+    def property_features(self):    # END: Standard data on each property page
+        if [i.text for i in soup.find_all('div', class_='attribute-title-container')] != []:
+            property_features.append([i.text for i in soup.find_all(
+                'div', class_='attribute-title-container')])
+            print('Property Features                : ' + 'Success')
+        else:
+            print('Property Features                : '+'NaN')
+            property_features.append('NaN')
 
-
-
-
-    # END: Standard data on each property page
-
-    # START: Data in property details container (can vary)
-
-    def property_type(self):
+    def property_type(self):          # START: Data in property details container (can vary)
         if 'Property Type' in details_dict:
             temp = details_dict['Property Type']
             property_type.append(soup.find_all(
@@ -223,7 +229,7 @@ class Task():
             print('Available Date                   : ' + 'NaN')
             available_date.append('NaN')
 
-    def posted_date(self):
+    def posted_date(self):              # END: Data in property details container (can vary)
         if 'Posted Date' in details_dict:
             temp = details_dict['Posted Date']
             posted_date.append(soup.find_all(
@@ -233,71 +239,33 @@ class Task():
             print('Posted Date                      : ' + 'NaN')
             posted_date.append('NaN')
 
-    # END: Data in property details container (can vary)
-
-    # FINALLY: Property_features (incl Features & Facilities)
-    def property_features(self):
-        if 'Posted Date' in details_dict:
-            temp = details_dict['Posted Date']
-            posted_date.append(soup.find_all(
-                'div', class_='PropertyDetailsListstyle__AttributeItemData-jpQfWB HUTFZ')[temp].text)
-            print('Posted Date                      : ' + 'Success')
-        else:
-            print('Posted Date                      : ' + 'NaN')
-            posted_date.append('NaN')
-
-    def get_method(self, method_name):  # method1 = callbyname.get_method(method_name)
-        method = getattr(self, method_name)
-        return method()
+    # def get_method(self, method_name):  # method1 = callbyname.get_method(method_name)
+    #     method = getattr(self, method_name)
+    #     return method()
 
 
 print('\n| iProperty.com.my Scraper |')
 sleep(1)
 
-d = pd.read_csv(
+data_links = pd.read_csv(
     'hardcopy-rent-kl-sentral-438-property-links.csv').values.tolist()
-links = list(itertools.chain(*d))
-test_list = links[5:8]
+links = list(itertools.chain(*data_links))
+test_list = links[:3]
 
-print('\n')
-print('List of properties to be scraped...')
+print('\nList of properties to be scraped...')
 sleep(2)
 text = "{}".format("\n".join(test_list))
-print(text)
-print('\n')
+print(text + '\n')
 
 # BeautifulSoup stuff
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36'}
 
-# Create empty lists for scraped data to be appended to
-rent_id = []  # FINISHED
-prop_url = []  # FINISHED
-title = []  # finished
-property_price = []  # finished
-property_summary = [] #finished
-property_address = [] #finsihed
-built_up = []
-land_area = []
-property_details = []
+# Initialize empty lists
+rent_id, prop_url, title, property_price, property_summary, property_address, built_up, land_area, property_details, property_features, property_type, land_title, property_title_type, tenure, built_up_size_sq_ft, built_up_price_per_sq_ft, furnishing, occupancy, unit_type, facing_direction, reference, available_date, posted_date = ([
+] for i in range(23))
 
-# START: Property details container
-property_type = []
-land_title = []
-property_title_type = []
-tenure = []
-built_up_size_sq_ft = []
-built_up_price_per_sq_ft = []
-furnishing = []
-occupancy = []
-unit_type = []
-facing_direction = []
-reference = []
-available_date = []
-posted_date = []
-# END: Property details container
-property_features = []
-
+# Loop through the different properties from the .csv file (links)
 for i in range(len(test_list)):
     property_url = 'https://www.iproperty.com.my' + test_list[i]
     # print(r) #to get website's response
@@ -321,75 +289,24 @@ for i in range(len(test_list)):
     val = list(range(0, len(propdetails)))  # print(val)
     details_dict = dict(zip(details, val))  # print(details_dict)
 
-    t = Task()  # create a new Task object that handles the scraping calls
-    t.rent_id()
-    t.prop_url()
-    t.title()
-    t.property_price()
-    t.property_summary()
-    t.property_address()
-    t.built_up()
-    t.land_area()
+    t = Task()  # Initialize Task object as t
+    # Identify all methods in class and execute, rather than list methods 1 by 1
+    # https://stackoverflow.com/a/37075789
 
-    # getting all the data from the website
-
-    # rent_id.append(property_url.split('/')[6])
-
-    # prop_url.append(property_url)
-
-    # title.append(soup.find_all('title')[0].text)
-
-    # str_price = soup.find_all('div', class_='ListingPrice__Price-cYBbuG cspQqH property-price')[
-    #     0].text.split(' ')[2].replace(',', '')
-
-    # property_price.append(
-    #     int(''.join(itertools.takewhile(str.isdigit, str_price))))
-
-    # property_summary.append(soup.find_all(
-    #     'h1', class_='PropertySummarystyle__ProjectTitleWrapper-kAhflS PNQmp')[0].text)
-
-    # property_address.append(soup.find_all(
-    #     'span', class_='property-address rent-default')[0].text)
-
-    # built_up.append(soup.find_all(
-    #     'li', class_='PropertySummarystyle__AreaInfoItem-NjZCY dUovgc')[0].text.split(': ')[1])
-
-    # land_area.append(soup.find_all(
-    #     'li', class_='PropertySummarystyle__AreaInfoItem-NjZCY dUovgc')[1].text.split(': ')[1])
-
-    # details.append(str(soup.find('pre')).split('>')[1].splitlines())
-    # dumps everything into one element of a list
-
-    property_details.append(str(soup.find_all('pre')))
-
-    # >>> Property details <<<
-    t.property_type()
-    t.land_title()
-    t.property_title_type()
-    t.tenure()
-    t.built_up_size_sq_ft()
-    t.built_up_price_per_sq_ft()
-    t.furnishing()
-    t.occupancy()
-    t.unit_type()
-    t.facing_direction()
-    t.reference()
-    t.available_date()
-    t.posted_date()
-    # >>> End of property details <<<
-
-    if [i.text for i in soup.find_all('div', class_='attribute-title-container')] != []:
-        property_features.append([i.text for i in soup.find_all(
-            'div', class_='attribute-title-container')])
-    else:
-        property_features.append('NaN')
+    attrs = (getattr(t, name) for name in dir(t))
+    methods = filter(inspect.ismethod, attrs)
+    for method in methods:
+        try:
+            method()
+        except:
+            pass
 
 print('\n********** SCRAPE COMPLETED **********')
 
 # Adding to a DataFrame
 columns = ['rent_id', 'prop_url', 'title', 'property_price', 'property_summary', 'property_address', 'built_up', 'land_area', 'property_details', 'property_type', 'land_title',
-           'property_title_type', 'tenure', 'built_up_size_sq_ft', 'built_up_price_per_sq_ft', 'furnishing', 'occupancy', 'unit_type', 'reference',
-           'posted_date', 'property_features', 'facing_direction', 'available_date']
+           'property_title_type', 'tenure', 'built_up_size_sq_ft', 'built_up_price_per_sq_ft', 'furnishing', 'occupancy', 'unit_type', 'reference', 'posted_date', 'available_date',
+           'property_features', 'facing_direction']
 
 kl_sentral = pd.DataFrame({'rent_id': rent_id,
                            'prop_url': prop_url,
@@ -415,4 +332,6 @@ kl_sentral = pd.DataFrame({'rent_id': rent_id,
                            'facing_direction': facing_direction,
                            'available_date': available_date})[columns]
 
-kl_sentral.to_excel('kl_sentral.xlsx')
+date = datetime.now().strftime("%Y_%m_%d-%I-%M-%S_%p")
+filename = 'kl_sentral_' + date + '.xlsx'
+kl_sentral.to_excel(filename)
