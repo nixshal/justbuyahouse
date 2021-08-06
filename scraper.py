@@ -30,8 +30,8 @@ class LRTlinks():
         self.page_num = 0
         print('LRTlinks class test statement')
 
-    def get_links(self):
-        for i in range(0, 1):
+    def get_links(self, last_page_number):
+        for i in range(0, last_page_number):
             self.page_num += 1
             self.iproperty_url = 'https://www.iproperty.com.my/rent/all-residential/transport/kl-sentral-438/?page=' + \
                 str(self.page_num)
@@ -302,6 +302,9 @@ class Task():
 
 print('\n| iProperty.com.my Scraper |')
 sleep(1)
+
+# l = LRTlinks('kl-sentral-438')
+# l.get_links(1)
 
 data_links = pd.read_csv(
     'hardcopy-rent-kl-sentral-438-property-links.csv').values.tolist()
