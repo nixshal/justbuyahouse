@@ -1,17 +1,8 @@
-#To Do: 
+# To Do:
 
-make sure the class works properly
-check what value is returned 
-copy this class into main .py script and test
-
-
-
-
-
-
-
-
-
+# make sure the class works properly
+# check what value is returned
+# copy this class into main .py script and test
 
 
 import requests
@@ -85,8 +76,8 @@ class LRTlinks():
         pass
 
 
-l = LRTlinks('kl-sentral-438')
-l.get_links()
+# l = LRTlinks('kl-sentral-438')
+# l.get_links()
 
 
 print('/')
@@ -107,48 +98,48 @@ print('/')
 # BeautifulSoup stuff
 
 
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36'}
+# headers = {
+#     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36'}
 
-page_num = 0
+# page_num = 0
 
-links = []
-for page in range(0, 1):
-    page_num += 1
-    self.iproperty_url = 'https://www.iproperty.com.my/rent/all-residential/transport/kl-sentral-438/?page=' + \
-        str(page_num)
-    r = requests.get(self.iproperty_url, headers=headers)
-    print(r)
-    sleep(5)
-    print('Now scraping page ' + str(page_num))
-    soup = BeautifulSoup(r.content, 'html.parser')
-    for link in soup.findAll('a'):
-        # print(link.get('href'))
-        links.append(link.get('href'))
+# links = []
+# for page in range(0, 1):
+#     page_num += 1
+#     self.iproperty_url = 'https://www.iproperty.com.my/rent/all-residential/transport/kl-sentral-438/?page=' + \
+#         str(page_num)
+#     r = requests.get(self.iproperty_url, headers=headers)
+#     print(r)
+#     sleep(5)
+#     print('Now scraping page ' + str(page_num))
+#     soup = BeautifulSoup(r.content, 'html.parser')
+#     for link in soup.findAll('a'):
+#         # print(link.get('href'))
+#         links.append(link.get('href'))
 
-links = [i for i in links if i]  # removes None
-print(len(links))
-
-
-print('**********ALL LINKS FOR TRAIN STATION ID: ' + 'COMPLETE**********')
-
-to_remove = ['http', 'tel', 'photo', 'video', 'floorplan']
-
-filtered_list = [
-    i for i in links if "http" not in i and "tel" not in i and "photo" not in i and "video" not in i and "floorplan" not in i and len(i) > 10]
-
-# for loop implementation
-# for i in links:
-#     if "http" not in i and "tel" not in i and "photo" not in i and "video" not in i and "floorplan" not in i and len(i) > 10:
-#         nlist.append(i)
+# links = [i for i in links if i]  # removes None
+# print(len(links))
 
 
-df = pd.DataFrame(filtered_list, columns=["links"])
+# print('**********ALL LINKS FOR TRAIN STATION ID: ' + 'COMPLETE**********')
 
-df.drop_duplicates(inplace=True)
+# to_remove = ['http', 'tel', 'photo', 'video', 'floorplan']
 
-self.filename = self.iproperty_url.split('/')
-self.filename = self.filename[3] + '-' + \
-    self.filename[6] + '-' + 'property-links' + '.csv'
+# filtered_list = [
+#     i for i in links if "http" not in i and "tel" not in i and "photo" not in i and "video" not in i and "floorplan" not in i and len(i) > 10]
 
-df.to_csv(self.filename, index=False)  # to print to a csv
+# # for loop implementation
+# # for i in links:
+# #     if "http" not in i and "tel" not in i and "photo" not in i and "video" not in i and "floorplan" not in i and len(i) > 10:
+# #         nlist.append(i)
+
+
+# df = pd.DataFrame(filtered_list, columns=["links"])
+
+# df.drop_duplicates(inplace=True)
+
+# self.filename = self.iproperty_url.split('/')
+# self.filename = self.filename[3] + '-' + \
+#     self.filename[6] + '-' + 'property-links' + '.csv'
+
+# df.to_csv(self.filename, index=False)  # to print to a csv

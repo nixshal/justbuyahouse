@@ -18,7 +18,60 @@ startTime = time.time()
 # error handling, add some try, except clauses
 
 
+class LRTlinks():
+    "This is a LRTlinks class"
+
+    def __init__(self, station_id):
+        self.station_id = station_id
+        self.headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36'}
+        self.to_remove = ['http', 'tel', 'photo', 'video', 'floorplan']
+        self.links = []
+        self.page_num = 0
+        print('LRTlinks class test statement')
+
+    def get_links(self):
+        for i in range(0, 1):
+            self.page_num += 1
+            self.iproperty_url = 'https://www.iproperty.com.my/rent/all-residential/transport/kl-sentral-438/?page=' + \
+                str(self.page_num)
+            self.r = requests.get(self.iproperty_url, headers=self.headers)
+            print(self.r)
+            sleep(5)
+            print('Now scraping page ' + str(self.page_num))
+            self.soup = BeautifulSoup(self.r.content, 'html.parser')
+            for link in self.soup.findAll('a'):
+                # print(link.get('href'))
+                self.links.append(link.get('href'))
+
+        self.links = [i for i in self.links if i]  # removes None
+        print(len(self.links))
+
+        print('**********ALL LINKS FOR TRAIN STATION ID: ' + 'COMPLETE**********')
+
+        self.filtered_list = [
+            i for i in self.links if "http" not in i and "tel" not in i and "photo" not in i and "video" not in i and "floorplan" not in i and len(i) > 10]
+
+        # for loop implementation
+        # for i in links:
+        #     if "http" not in i and "tel" not in i and "photo" not in i and "video" not in i and "floorplan" not in i and len(i) > 10:
+        #         nlist.append(i)
+
+        df = pd.DataFrame(self.filtered_list, columns=["links"])
+        df.drop_duplicates(inplace=True)
+
+        self.filename = self.iproperty_url.split('/')
+        self.filename = self.filename[3] + '-' + self.filename[6] + \
+            '-' + 'property-links' + '.csv'
+
+        # File save location info
+        print('\n.csv file with property links for station_id >' +
+              self.station_id + '< saved to : ' + self.filename)
+        df.to_csv(self.filename, index=False)  # to print to a csv
+        pass
+
 class Task():
+    ' This is a Task class to carry out all the scraping functions'
 
     def rent_id(self):                      # START: Standard data on each property page
         if property_url != '':
@@ -246,13 +299,14 @@ class Task():
     #     method = getattr(self, method_name)
     #     return method()
 
+
 print('\n| iProperty.com.my Scraper |')
 sleep(1)
 
 data_links = pd.read_csv(
     'hardcopy-rent-kl-sentral-438-property-links.csv').values.tolist()
 links = list(itertools.chain(*data_links))
-test_list = links[:5]
+test_list = links[:3]
 
 print('\nList of properties to be scraped...')
 sleep(1)
@@ -280,7 +334,7 @@ try:
             'h1', class_='PropertySummarystyle__ProjectTitleWrapper-kAhflS PNQmp')[0].text
 
         print('********** ' + str(i) + ' Scraping data for: ' +
-            prop_name + ' **********')
+              prop_name + ' **********')
 
         # Creating a dictionary for property details held in container
         # Needed because problem here is that proeprty details are different for each property. So need to have conditionals to match the correct list to be updated
@@ -308,32 +362,32 @@ try:
 
     # Adding to a DataFrame
     columns = ['rent_id', 'prop_url', 'title', 'property_price', 'property_summary', 'property_address', 'built_up', 'land_area_sq_ft', 'property_details', 'property_type', 'land_title',
-            'property_title_type', 'tenure', 'built_up_size_sq_ft', 'built_up_price_per_sq_ft', 'furnishing', 'occupancy', 'unit_type', 'reference', 'posted_date', 'available_date',
-            'property_features', 'facing_direction']
+               'property_title_type', 'tenure', 'built_up_size_sq_ft', 'built_up_price_per_sq_ft', 'furnishing', 'occupancy', 'unit_type', 'reference', 'posted_date', 'available_date',
+               'property_features', 'facing_direction']
 
     kl_sentral = pd.DataFrame({'rent_id': rent_id,
-                            'prop_url': prop_url,
-                            'title': title,
-                            'property_price': property_price,
-                            'property_summary': property_summary,
-                            'property_address': property_address,
-                            'built_up': built_up,
-                            'land_area_sq_ft': land_area_sq_ft,
-                            'property_details': property_details,
-                            'property_type': property_type,
-                            'land_title': land_title,
-                            'property_title_type': property_title_type,
-                            'tenure': tenure,
-                            'built_up_size_sq_ft': built_up_size_sq_ft,
-                            'built_up_price_per_sq_ft': built_up_price_per_sq_ft,
-                            'furnishing': furnishing,
-                            'occupancy': occupancy,
-                            'unit_type': unit_type,
-                            'reference': reference,
-                            'posted_date': posted_date,
-                            'property_features': property_features,
-                            'facing_direction': facing_direction,
-                            'available_date': available_date})[columns]
+                               'prop_url': prop_url,
+                               'title': title,
+                               'property_price': property_price,
+                               'property_summary': property_summary,
+                               'property_address': property_address,
+                               'built_up': built_up,
+                               'land_area_sq_ft': land_area_sq_ft,
+                               'property_details': property_details,
+                               'property_type': property_type,
+                               'land_title': land_title,
+                               'property_title_type': property_title_type,
+                               'tenure': tenure,
+                               'built_up_size_sq_ft': built_up_size_sq_ft,
+                               'built_up_price_per_sq_ft': built_up_price_per_sq_ft,
+                               'furnishing': furnishing,
+                               'occupancy': occupancy,
+                               'unit_type': unit_type,
+                               'reference': reference,
+                               'posted_date': posted_date,
+                               'property_features': property_features,
+                               'facing_direction': facing_direction,
+                               'available_date': available_date})[columns]
 
     date = datetime.now().strftime("%Y_%m_%d-%I-%M-%S_%p")
     filename = 'kl_sentral_' + date + '.xlsx'
@@ -343,7 +397,7 @@ try:
     print('\nThe script took {0} seconds !'.format(time.time() - startTime))
 
     # File save location info
-    print('nFile saved to: ' + filename)
+    print('\nFile saved to: ' + filename)
 
 except:
     pass
