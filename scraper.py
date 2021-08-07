@@ -9,6 +9,8 @@ import pandas as pd
 import numpy as np
 import re
 
+from classes import LRTlinks
+
 startTime = time.time()
 
 # To do
@@ -16,62 +18,14 @@ startTime = time.time()
 # create a class for the scraping of links
 # how to get the phone number and agent etc? use JSON? https://stackoverflow.com/questions/67515161/beautiful-soup-returns-an-empty-string-when-website-has-text
 # error handling, add some try, except clauses
+# replace lists with geenrator expressions
+# when running for full list, script hung after 1800++ files
+# how to add Task class to classes.py? problem with detail_dict
+# make sure works for other train stations too etc gombak. alter the code for general use cases
 
-
-class LRTlinks():
-    "This is a LRTlinks class"
-
-    def __init__(self, station_id):
-        self.station_id = station_id
-        self.headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36'}
-        self.to_remove = ['http', 'tel', 'photo', 'video', 'floorplan']
-        self.links = []
-        self.page_num = 0
-        print('LRTlinks class test statement')
-
-    def get_links(self, last_page_number):
-        for i in range(0, last_page_number):
-            self.page_num += 1
-            self.iproperty_url = 'https://www.iproperty.com.my/rent/all-residential/transport/kl-sentral-438/?page=' + \
-                str(self.page_num)
-            self.r = requests.get(self.iproperty_url, headers=self.headers)
-            print(self.r)
-            sleep(5)
-            print('Now scraping page ' + str(self.page_num))
-            self.soup = BeautifulSoup(self.r.content, 'html.parser')
-            for link in self.soup.findAll('a'):
-                # print(link.get('href'))
-                self.links.append(link.get('href'))
-
-        self.links = [i for i in self.links if i]  # removes None
-        print(len(self.links))
-
-        print('**********ALL LINKS FOR TRAIN STATION ID: ' + 'COMPLETE**********')
-
-        self.filtered_list = [
-            i for i in self.links if "http" not in i and "tel" not in i and "photo" not in i and "video" not in i and "floorplan" not in i and len(i) > 10]
-
-        # for loop implementation
-        # for i in links:
-        #     if "http" not in i and "tel" not in i and "photo" not in i and "video" not in i and "floorplan" not in i and len(i) > 10:
-        #         nlist.append(i)
-
-        df = pd.DataFrame(self.filtered_list, columns=["links"])
-        df.drop_duplicates(inplace=True)
-
-        self.filename = self.iproperty_url.split('/')
-        self.filename = self.filename[3] + '-' + self.filename[6] + \
-            '-' + 'property-links' + '.csv'
-
-        # File save location info
-        print('\n.csv file with property links for station_id >' +
-              self.station_id + '< saved to : ' + self.filename)
-        df.to_csv(self.filename, index=False)  # to print to a csv
-        pass
 
 class Task():
-    ' This is a Task class to carry out all the scraping functions'
+    """ This is a Task class to carry out all the scraping functions """
 
     def rent_id(self):                      # START: Standard data on each property page
         if property_url != '':
@@ -300,23 +254,32 @@ class Task():
     #     return method()
 
 
+# ampang-park-89
+# kl-sentral-438
+# USER INPUT REQUIRED
+location_of_interest = 'usj-21-531'
+num_pages_to_scrape = 25  # 20 results per page
+
 print('\n| iProperty.com.my Scraper |')
 sleep(1)
 
-# l = LRTlinks('kl-sentral-438')
-# l.get_links(1)
+# Use the LRTlinks method
+# choose which Train Station ID here
+l = LRTlinks(location_of_interest)
+# choose how many pages to scrape (limit = 100)
+l.get_links(num_pages_to_scrape)
 
-data_links = pd.read_csv(
-    'hardcopy-rent-kl-sentral-438-property-links.csv').values.tolist()
+file_to_be_read = 'rent-' + location_of_interest + '-property-links.csv'
+data_links = pd.read_csv(file_to_be_read).values.tolist()
 links = list(itertools.chain(*data_links))
-test_list = links[:]
+test_list = links[:]  # how many properties to scrape (for test purposes)
 
 print('\nList of properties to be scraped...')
 sleep(1)
 text = "{}".format("\n".join(test_list))
 print(text + '\n')
 
-# BeautifulSoup stuff
+# headers specific to this website -- required for BeautifulSoup
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36'}
 
@@ -330,7 +293,7 @@ try:
         property_url = 'https://www.iproperty.com.my' + test_list[i]
         # print(r) #to get website's response
         r = requests.get(property_url, headers=headers)
-        sleep(7)
+        sleep(2)
         soup = BeautifulSoup(r.content, 'html.parser')
 
         prop_name = soup.find_all(
@@ -355,6 +318,7 @@ try:
 
         attrs = (getattr(t, name) for name in dir(t))
         methods = filter(inspect.ismethod, attrs)
+        print(methods)
         for method in methods:
             try:
                 method()
@@ -368,7 +332,7 @@ try:
                'property_title_type', 'tenure', 'built_up_size_sq_ft', 'built_up_price_per_sq_ft', 'furnishing', 'occupancy', 'unit_type', 'reference', 'posted_date', 'available_date',
                'property_features', 'facing_direction']
 
-    kl_sentral = pd.DataFrame({'rent_id': rent_id,
+    properties = pd.DataFrame({'rent_id': rent_id,
                                'prop_url': prop_url,
                                'title': title,
                                'property_price': property_price,
@@ -393,8 +357,8 @@ try:
                                'available_date': available_date})[columns]
 
     date = datetime.now().strftime("%Y_%m_%d-%I-%M-%S_%p")
-    filename = 'kl_sentral_' + date + '.xlsx'
-    kl_sentral.to_excel(filename)
+    filename = location_of_interest + '-' + date + '.xlsx'
+    properties.to_excel(filename)
 
     # Timing info
     print('\nThe script took {0} seconds !'.format(time.time() - startTime))
@@ -403,5 +367,4 @@ try:
     print('\nFile saved to: ' + filename)
 
 except:
-    break
     pass
