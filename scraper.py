@@ -8,7 +8,7 @@ import inspect
 import pandas as pd
 import numpy as np
 import re
-
+import cython
 from classes import LRTlinks
 
 startTime = time.time()
@@ -258,7 +258,7 @@ class Task():
 # kl-sentral-438
 # USER INPUT REQUIRED
 location_of_interest = 'usj-21-531'
-num_pages_to_scrape = 25  # 20 results per page
+num_pages_to_scrape = 3  # 20 results per page
 
 print('\n| iProperty.com.my Scraper |')
 sleep(1)
@@ -318,7 +318,6 @@ try:
 
         attrs = (getattr(t, name) for name in dir(t))
         methods = filter(inspect.ismethod, attrs)
-        print(methods)
         for method in methods:
             try:
                 method()
