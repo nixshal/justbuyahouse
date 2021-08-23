@@ -272,11 +272,14 @@ l.get_links(num_pages_to_scrape)
 file_to_be_read = 'rent-' + location_of_interest + '-property-links.csv'
 data_links = pd.read_csv(file_to_be_read).values.tolist()
 links = list(itertools.chain(*data_links))
-test_list = links[:3]  # how many properties to scrape (for test purposes)
+#test_list = links[:3]  
+
+# try with generators
+test_list = (i for i in links) # how many properties to scrape (for test purposes)
 
 print('\nList of properties to be scraped...')
 sleep(1)
-text = "{}".format("\n".join(test_list))
+text = "{}".format("\n".join(links))
 print(text + '\n')
 
 # headers specific to this website -- required for BeautifulSoup
@@ -287,10 +290,14 @@ headers = {
 rent_id, prop_url, title, property_price, property_summary, property_address, built_up, land_area_sq_ft, property_details, property_features, property_type, land_title, property_title_type, tenure, built_up_size_sq_ft, built_up_price_per_sq_ft, furnishing, occupancy, unit_type, facing_direction, reference, available_date, posted_date = ([
 ] for i in range(23))
 
+
+count = 0
+
 try:
     # Loop through the different properties from the .csv file (links)
-    for i in range(len(test_list)):
-        property_url = 'https://www.iproperty.com.my' + test_list[i]
+    for i in test_list: #range(len(test_list)) IF USING LISTS
+        count += 1
+        property_url = 'https://www.iproperty.com.my' + i
         # print(r) #to get website's response
         r = requests.get(property_url, headers=headers)
         sleep(2)
@@ -299,7 +306,7 @@ try:
         prop_name = soup.find_all(
             'h1', class_='PropertySummarystyle__ProjectTitleWrapper-kAhflS PNQmp')[0].text
 
-        print('********** ' + str(i) + ' Scraping data for: ' +
+        print('********** ' + str(count) + ' Scraping data for: ' +
               prop_name + ' **********')
 
         # Creating a dictionary for property details held in container
@@ -367,5 +374,5 @@ try:
     # File save location info
     print('\nFile saved to: ' + filename)
 
-except:
-    pass
+except Exception as e:
+    print(e)
