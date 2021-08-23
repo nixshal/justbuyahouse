@@ -258,7 +258,7 @@ class Task():
 # kl-sentral-438
 # USER INPUT REQUIRED
 location_of_interest = 'usj-21-531'
-num_pages_to_scrape = 3  # 20 results per page
+num_pages_to_scrape = 1  # 20 results per page
 
 print('\n| iProperty.com.my Scraper |')
 sleep(1)
@@ -272,7 +272,7 @@ l.get_links(num_pages_to_scrape)
 file_to_be_read = 'rent-' + location_of_interest + '-property-links.csv'
 data_links = pd.read_csv(file_to_be_read).values.tolist()
 links = list(itertools.chain(*data_links))
-test_list = links[:]  # how many properties to scrape (for test purposes)
+test_list = links[:3]  # how many properties to scrape (for test purposes)
 
 print('\nList of properties to be scraped...')
 sleep(1)
@@ -317,7 +317,9 @@ try:
         # https://stackoverflow.com/a/37075789
 
         attrs = (getattr(t, name) for name in dir(t))
+        print('trying...')
         methods = filter(inspect.ismethod, attrs)
+        print('success')
         for method in methods:
             try:
                 method()
