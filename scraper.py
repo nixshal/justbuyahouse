@@ -256,7 +256,7 @@ class Task():
 # kl-sentral-438
 # USER INPUT REQUIRED
 location_of_interest = 'ss-15-316'  # 'usj-21-531'
-num_pages_to_scrape = 1  # 20 results per page
+num_pages_to_scrape = 50  # 20 results per page
 
 print('\n| iProperty.com.my Scraper |')
 
