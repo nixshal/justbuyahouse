@@ -59,20 +59,18 @@ class LRTlinks():
         self.links = []
         self.page_num = 0
         print('Initializing scraper to gather property links...')
-        sleep(1)
 
     def get_links(self, last_page_number):
         try:
             self.last_page_number = last_page_number
             print('Scraping for links near: ' + self.station_id + ' ...')
             print('Scraping until page: ' + str(self.last_page_number))
-            sleep(1)
             for i in range(0, last_page_number):
                 self.page_num += 1
                 self.iproperty_url = 'https://www.iproperty.com.my/rent/all-residential/transport/' + \
                     self.station_id + '/?page=' + str(self.page_num)
                 self.r = requests.get(self.iproperty_url, headers=self.headers)
-                sleep(4)
+                sleep(2)
                 print('Now scraping page ' + str(self.page_num))
                 self.soup = BeautifulSoup(self.r.content, 'html.parser')
                 for link in self.soup.findAll('a'):

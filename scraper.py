@@ -259,7 +259,6 @@ location_of_interest = 'ss-15-316'  # 'usj-21-531'
 num_pages_to_scrape = 1  # 20 results per page
 
 print('\n| iProperty.com.my Scraper |')
-sleep(1)
 
 # Use the LRTlinks method
 # choose which Train Station ID here
@@ -276,7 +275,6 @@ links = list(itertools.chain(*data_links))
 test_list = (i for i in links)
 
 print('\nList of properties to be scraped...')
-sleep(1)
 text = "{}".format("\n".join(links))
 print(text + '\n')
 
