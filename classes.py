@@ -65,6 +65,7 @@ class LRTlinks():
         try:
             self.last_page_number = last_page_number
             print('Scraping for links near: ' + self.station_id + ' ...')
+            print('Scraping until page: ' + str(self.last_page_number))
             sleep(1)
             for i in range(0, last_page_number):
                 self.page_num += 1

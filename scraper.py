@@ -8,7 +8,6 @@ import inspect
 import pandas as pd
 import numpy as np
 import re
-import cython
 from classes import LRTlinks
 
 startTime = time.time()
@@ -18,7 +17,6 @@ startTime = time.time()
 # create a class for the scraping of links
 # how to get the phone number and agent etc? use JSON? https://stackoverflow.com/questions/67515161/beautiful-soup-returns-an-empty-string-when-website-has-text
 # error handling, add some try, except clauses
-# replace lists with geenrator expressions
 # when running for full list, script hung after 1800++ files
 # how to add Task class to classes.py? problem with detail_dict
 # make sure works for other train stations too etc gombak. alter the code for general use cases
@@ -257,7 +255,7 @@ class Task():
 # ampang-park-89
 # kl-sentral-438
 # USER INPUT REQUIRED
-location_of_interest = 'usj-21-531'
+location_of_interest = 'ss-15-316'  # 'usj-21-531'
 num_pages_to_scrape = 1  # 20 results per page
 
 print('\n| iProperty.com.my Scraper |')
@@ -272,10 +270,10 @@ l.get_links(num_pages_to_scrape)
 file_to_be_read = 'rent-' + location_of_interest + '-property-links.csv'
 data_links = pd.read_csv(file_to_be_read).values.tolist()
 links = list(itertools.chain(*data_links))
-#test_list = links[:3]  
 
 # try with generators
-test_list = (i for i in links) # how many properties to scrape (for test purposes)
+# how many properties to scrape (for test purposes)
+test_list = (i for i in links)
 
 print('\nList of properties to be scraped...')
 sleep(1)
@@ -290,12 +288,11 @@ headers = {
 rent_id, prop_url, title, property_price, property_summary, property_address, built_up, land_area_sq_ft, property_details, property_features, property_type, land_title, property_title_type, tenure, built_up_size_sq_ft, built_up_price_per_sq_ft, furnishing, occupancy, unit_type, facing_direction, reference, available_date, posted_date = ([
 ] for i in range(23))
 
-
 count = 0
 
 try:
     # Loop through the different properties from the .csv file (links)
-    for i in test_list: #range(len(test_list)) IF USING LISTS
+    for i in test_list:  # range(len(test_list)) IF USING LISTS
         count += 1
         property_url = 'https://www.iproperty.com.my' + i
         # print(r) #to get website's response
@@ -324,14 +321,12 @@ try:
         # https://stackoverflow.com/a/37075789
 
         attrs = (getattr(t, name) for name in dir(t))
-        print('trying...')
         methods = filter(inspect.ismethod, attrs)
-        print('success')
         for method in methods:
             try:
                 method()
-            except:
-                pass
+            except Exception as e:
+                print(e)
 
     print('\n********** SCRAPE COMPLETED **********')
 
